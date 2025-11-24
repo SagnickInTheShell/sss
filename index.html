@@ -7,12 +7,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
 </head>
+<script>
+    // Load saved theme on home page
+    document.addEventListener("DOMContentLoaded", () => {
+        const savedTheme = localStorage.getItem("theme") || "dark";
+        document.documentElement.setAttribute("data-theme", savedTheme);
+
+        const themeToggle = document.querySelector(".theme-toggle");
+        if (themeToggle) {
+            themeToggle.textContent = savedTheme === "dark" ? "🌙" : "☀️";
+        }
+    });
+
+    // Toggle theme on Home page
+    function toggleTheme() {
+        const root = document.documentElement;
+        const currentTheme = root.getAttribute('data-theme');
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+        root.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+
+        const themeToggle = document.querySelector(".theme-toggle");
+        if (themeToggle) {
+            themeToggle.textContent = newTheme === "dark" ? "🌙" : "☀️";
+        }
+    }
+</script>
+
 <body>
     <!-- Header -->
     <header id="header">
         <div class="logo">StatCalc</div>
         <nav>
-            <a href="home">Home</a>
+            <a href="index.html">Home</a>
             <div class="dropdown">
                 <span>Calculators</span>
                 <div class="dropdown-content">
@@ -23,7 +51,7 @@
                 </div>
             </div>
             <a href="about">About</a>
-            <button class="theme-toggle" onclick="alert('Theme toggle coming soon!')">🌙</button>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
         </nav>
     </header>
 
