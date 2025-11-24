@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binomial Distribution Calculator - StatCalc</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(245, 158, 66, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(245, 120, 66, 0.06) 0%, transparent 50%);
+            animation: gradientShift 20s ease infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-10%, -10%) rotate(10deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2.5rem;
+            background: linear-gradient(135deg, rgba(245, 158, 66, 0.15) 0%, rgba(245, 120, 66, 0.1) 100%);
+            border-radius: 20px;
+            border: 2px solid rgba(245, 158, 66, 0.3);
+            box-shadow: 0 10px 40px rgba(245, 158, 66, 0.15);
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #f59e42;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.8rem 1.5rem;
+            border: 1px solid rgba(245, 158, 66, 0.3);
+            border-radius: 10px;
+            background: rgba(245, 158, 66, 0.1);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            background: rgba(245, 158, 66, 0.2);
+            border-color: rgba(245, 158, 66, 0.5);
+            transform: translateY(-50%) translateX(-5px);
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3rem;
+            background: linear-gradient(135deg, #fff 0%, #f59e42 50%, #f57842 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .panel {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .panel h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: #f59e42;
+            margin-bottom: 2rem;
+            font-size: 1.6rem;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 2.5rem;
+        }
+
+        .input-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            color: #b0b0b0;
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            background: rgba(245, 158, 66, 0.3);
+            border-radius: 50%;
+            font-size: 0.75rem;
+            cursor: help;
+            margin-left: 8px;
+            color: #f59e42;
+            position: relative;
+        }
+
+        .tooltip-icon:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 20, 20, 0.98);
+            color: #fff;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            border: 1px solid rgba(245, 158, 66, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .slider-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e42 0%, #f57842 100%);
+            cursor: pointer;
+            box-shadow: 0 3px 15px rgba(245, 158, 66, 0.6);
+            transition: all 0.3s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f59e42 0%, #f57842 100%);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 3px 15px rgba(245, 158, 66, 0.6);
+        }
+
+        input[type="number"] {
+            width: 85px;
+            padding: 0.6rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #f59e42;
+            background: rgba(245, 158, 66, 0.1);
+        }
+
+        .value-display {
+            font-weight: 700;
+            color: #f59e42;
+            font-size: 1.2rem;
+            min-width: 60px;
+            text-align: right;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, rgba(245, 158, 66, 0.1) 0%, rgba(245, 158, 66, 0.05) 100%);
+            padding: 1.8rem;
+            border-radius: 14px;
+            border: 1px solid rgba(245, 158, 66, 0.25);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #f59e42, #f57842);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .result-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, rgba(245, 158, 66, 0.15) 0%, rgba(245, 158, 66, 0.08) 100%);
+            box-shadow: 0 15px 35px rgba(245, 158, 66, 0.25);
+        }
+
+        .result-card h3 {
+            font-size: 0.95rem;
+            color: #b0b0b0;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .result-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f59e42;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 450px;
+            margin-top: 1.5rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2.5rem;
+        }
+
+        button {
+            flex: 1;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #f59e42 0%, #f57842 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.05rem;
+            box-shadow: 0 5px 20px rgba(245, 158, 66, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(245, 158, 66, 0.5);
+        }
+
+        button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: none;
+        }
+
+        button.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .info-section {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 2rem;
+        }
+
+        .info-section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            color: #f59e42;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .info-section p {
+            color: #b0b0b0;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .info-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-section li {
+            color: #b0b0b0;
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .info-section li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #f59e42;
+        }
+
+        .error-message {
+            background: rgba(255, 82, 82, 0.1);
+            border: 1px solid rgba(255, 82, 82, 0.3);
+            color: #ff5252;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .simulation-status {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(245, 158, 66, 0.1);
+            border-radius: 10px;
+            margin-top: 1rem;
+            color: #f59e42;
+            font-weight: 600;
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .back-button {
+                position: relative;
+                left: 0;
+                top: 0;
+                transform: none;
+                margin-bottom: 1.5rem;
+                width: fit-content;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .panel {
+                padding: 1.5rem;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">
+                ← Back to Home
+            </a>
+            <h1>Binomial Distribution Calculator</h1>
+            <p class="subtitle">Interactive probability exploration with real-time visualization</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Left Panel: Inputs -->
+            <div class="panel">
+                <h2>Parameters</h2>
+                
+                <div class="input-group">
+                    <label>
+                        Number of Trials (n)
+                        <span class="tooltip-icon" data-tooltip="Total number of independent experiments">?</span>
+                    </label>
+                    <div class="slider-container">
+                        <input type="range" id="nSlider" min="1" max="100" value="10">
+                        <span class="value-display" id="nValue">10</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        Probability of Success (p)
+                        <span class="tooltip-icon" data-tooltip="Probability of success in a single trial (0 to 1)">?</span>
+                    </label>
+                    <div class="slider-container">
+                        <input type="range" id="pSlider" min="0" max="1" step="0.01" value="0.5">
+                        <span class="value-display" id="pValue">0.50</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>
+                        Number of Successes (k)
+                        <span class="tooltip-icon" data-tooltip="Desired number of successful outcomes">?</span>
+                    </label>
+                    <input type="number" id="kInput" min="0" max="10" value="5">
+                </div>
+
+                <div class="error-message" id="errorMessage"></div>
+
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3>P(X = k)</h3>
+                        <div class="value" id="pmfValue">0.2461</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>P(X ≤ k)</h3>
+                        <div class="value" id="cdfValue">0.6230</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>P(X ≥ k)</h3>
+                        <div class="value" id="rightTailValue">0.6230</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Mean (μ)</h3>
+                        <div class="value" id="meanValue">5.00</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Variance (σ²)</h3>
+                        <div class="value" id="varianceValue">2.50</div>
+                    </div>
+                    <div class="result-card">
+                        <h3>Std Dev (σ)</h3>
+                        <div class="value" id="stdDevValue">1.58</div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button onclick="runSimulation()">Run Simulation</button>
+                    <button class="secondary" onclick="resetValues()">Reset</button>
+                </div>
+
+                <div class="simulation-status" id="simStatus"></div>
+            </div>
+
+            <!-- Right Panel: Visualization -->
+            <div class="panel">
+                <h2>Probability Distribution</h2>
+                <div class="chart-container">
+                    <canvas id="distributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Educational Information -->
+        <div class="info-section">
+            <h3>About Binomial Distribution</h3>
+            <p>The Binomial Distribution models the number of successes in a fixed number of independent trials, each with the same probability of success.</p>
+            
+            <h3 style="margin-top: 2rem;">Key Properties</h3>
+            <ul>
+                <li><strong>n</strong>: Number of independent trials (must be fixed in advance)</li>
+                <li><strong>p</strong>: Probability of success on each trial (constant across trials)</li>
+                <li><strong>k</strong>: Number of successful outcomes we're calculating probability for</li>
+                <li><strong>Mean (μ)</strong>: Expected average number of successes = n × p</li>
+                <li><strong>Variance (σ²)</strong>: Measure of spread = n × p × (1 - p)</li>
+            </ul>
+
+            <h3 style="margin-top: 2rem;">How Parameters Affect the Distribution</h3>
+            <ul>
+                <li>Increasing <strong>n</strong> makes the distribution approach a normal curve (Central Limit Theorem)</li>
+                <li>When <strong>p = 0.5</strong>, the distribution is symmetric</li>
+                <li>When <strong>p < 0.5</strong>, the distribution is right-skewed</li>
+                <li>When <strong>p > 0.5</strong>, the distribution is left-skewed</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Mathematical Functions
+        function factorial(n) {
+            if (n <= 1) return 1;
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        function combination(n, k) {
+            if (k > n) return 0;
+            if (k === 0 || k === n) return 1;
+            
+            k = Math.min(k, n - k);
+            
+            let result = 1;
+            for (let i = 0; i < k; i++) {
+                result *= (n - i);
+                result /= (i + 1);
+            }
+            return result;
+        }
+
+        function binomialPMF(n, k, p) {
+            return combination(n, k) * Math.pow(p, k) * Math.pow(1 - p, n - k);
+        }
+
+        function binomialCDF(n, k, p) {
+            let sum = 0;
+            for (let i = 0; i <= k; i++) {
+                sum += binomialPMF(n, i, p);
+            }
+            return sum;
+        }
+
+        function binomialRightTail(n, k, p) {
+            return 1 - binomialCDF(n, k - 1, p);
+        }
+
+        // Global variables
+        let chart;
+        let n = 10, p = 0.5, k = 5;
+
+        // Initialize Chart
+        function initChart() {
+            const ctx = document.getElementById('distributionChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'P(X = k)',
+                        data: [],
+                        backgroundColor: [],
+                        borderColor: [],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(20, 20, 20, 0.95)',
+                            titleColor: '#f59e42',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(245, 158, 66, 0.3)',
+                            borderWidth: 1,
+                            padding: 12,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Probability: ' + context.parsed.y.toFixed(4);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#b0b0b0'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Probability',
+                                color: '#f59e42',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            },
+                            ticks: {
+                                color: '#b0b0b0'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Number of Successes (k)',
+                                color: '#f59e42',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update Chart
+        function updateChart() {
+            const labels = [];
+            const data = [];
+            const colors = [];
+            const borderColors = [];
+
+            for (let i = 0; i <= n; i++) {
+                labels.push(i);
+                const prob = binomialPMF(n, i, p);
+                data.push(prob);
+                
+                if (i === k) {
+                    colors.push('rgba(245, 158, 66, 0.8)');
+                    borderColors.push('rgba(245, 158, 66, 1)');
+                } else {
+                    colors.push('rgba(255, 255, 255, 0.2)');
+                    borderColors.push('rgba(255, 255, 255, 0.4)');
+                }
+            }
+
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = data;
+            chart.data.datasets[0].backgroundColor = colors;
+            chart.data.datasets[0].borderColor = borderColors;
+            chart.update();
+        }
+
+        // Update Calculations
+        function updateCalculations() {
+            if (k > n) {
+                document.getElementById('errorMessage').textContent = 'k cannot be greater than n';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('errorMessage').style.display = 'none';
+            }
+
+            const pmf = binomialPMF(n, k, p);
+            const cdf = binomialCDF(n, k, p);
+            const rightTail = binomialRightTail(n, k, p);
+            const mean = n * p;
+            const variance = n * p * (1 - p);
+            const stdDev = Math.sqrt(variance);
+
+            document.getElementById('pmfValue').textContent = pmf.toFixed(4);
+            document.getElementById('cdfValue').textContent = cdf.toFixed(4);
+            document.getElementById('rightTailValue').textContent = rightTail.toFixed(4);
+            document.getElementById('meanValue').textContent = mean.toFixed(2);
+            document.getElementById('varianceValue').textContent = variance.toFixed(2);
+            document.getElementById('stdDevValue').textContent = stdDev.toFixed(2);
+
+            updateChart();
+        }
+
+        // Event Listeners
+        document.getElementById('nSlider').addEventListener('input', function() {
+            n = parseInt(this.value);
+            document.getElementById('nValue').textContent = n;
+            document.getElementById('kInput').max = n;
+            if (k > n) {
+                k = n;
+                document.getElementById('kInput').value = k;
+            }
+            updateCalculations();
+        });
+
+        document.getElementById('pSlider').addEventListener('input', function() {
+            p = parseFloat(this.value);
+            document.getElementById('pValue').textContent = p.toFixed(2);
+            updateCalculations();
+        });
+
+        document.getElementById('kInput').addEventListener('input', function() {
+            k = parseInt(this.value);
+            if (k < 0) k = 0;
+            if (k > n) k = n;
+            this.value = k;
+            updateCalculations();
+        });
+
+        // Simulation Function
+        function runSimulation() {
+            const simStatus = document.getElementById('simStatus');
+            simStatus.textContent = 'Running 10,000 simulations...';
+            simStatus.style.display = 'block';
+
+            setTimeout(() => {
+                const simResults = Array(n + 1).fill(0);
+                const numSims = 10000;
+
+                for (let sim = 0; sim < numSims; sim++) {
+                    let successes = 0;
+                    for (let trial = 0; trial < n; trial++) {
+                        if (Math.random() < p) successes++;
+                    }
+                    simResults[successes]++;
+                }
+
+                const simData = simResults.map(count => count / numSims);
+                
+                if (chart.data.datasets.length > 1) {
+                    chart.data.datasets.pop();
+                }
+
+                chart.data.datasets.push({
+                    label: 'Simulation',
+                    data: simData,
+                    type: 'line',
+                    borderColor: 'rgba(66, 245, 182, 1)',
+                    backgroundColor: 'rgba(66, 245, 182, 0.1)',
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointBackgroundColor: 'rgba(66, 245, 182, 1)',
+                    fill: false
+                });
+
+                chart.options.plugins.legend.display = true;
+                chart.options.plugins.legend.labels = {
+                    color: '#b0b0b0',
+                    font: { size: 12 }
+                };
+                chart.update();
+
+                simStatus.textContent = '✓ Simulation complete! Green line shows experimental results.';
+            }, 100);
+        }
+
+        // Reset Function
+        function resetValues() {
+            n = 10;
+            p = 0.5;
+            k = 5;
+            
+            document.getElementById('nSlider').value = n;
+            document.getElementById('pSlider').value = p;
+            document.getElementById('kInput').value = k;
+            document.getElementById('nValue').textContent = n;
+            document.getElementById('pValue').textContent = p.toFixed(2);
+            
+            if (chart.data.datasets.length > 1) {
+                chart.data.datasets.pop();
+                chart.options.plugins.legend.display = false;
+                chart.update();
+            }
+            
+            document.getElementById('simStatus').style.display = 'none';
+            updateCalculations();
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            initChart();
+            updateCalculations();
+        };
+    </script>
+</body>
+</html>
