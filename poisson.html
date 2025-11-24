@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Binomial Distribution Calculator - StatCalc</title>
+    <title>Poisson Distribution Calculator - StatCalc</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chart.js/4.4.0/chart.umd.min.js"></script>
     <style>
@@ -64,7 +64,6 @@
             50% { transform: translate(-10%, -10%) rotate(10deg); }
         }
 
-        /* Header */
         header {
             position: fixed;
             top: 0;
@@ -132,7 +131,6 @@
             transform: rotate(20deg);
         }
 
-        /* Main Content */
         .container {
             margin-top: 100px;
             padding: 3rem 8%;
@@ -164,7 +162,6 @@
             line-height: 1.8;
         }
 
-        /* Calculator Layout */
         .calculator-grid {
             display: grid;
             grid-template-columns: 1fr 2fr;
@@ -188,7 +185,6 @@
             font-weight: 600;
         }
 
-        /* Parameter Controls */
         .parameter-group {
             margin-bottom: 2.5rem;
         }
@@ -256,14 +252,12 @@
             box-shadow: 0 0 0 3px rgba(245, 158, 66, 0.1);
         }
 
-        /* Charts */
         .chart-container {
             position: relative;
             height: 300px;
             margin-bottom: 2rem;
         }
 
-        /* Results Section */
         .results-section {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -309,7 +303,6 @@
             font-weight: 700;
         }
 
-        /* Knowledge Section */
         .knowledge-section {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -360,16 +353,13 @@
             font-weight: bold;
         }
 
-        /* Responsive */
         @media (max-width: 968px) {
             .calculator-grid {
                 grid-template-columns: 1fr;
             }
-
             .page-title {
                 font-size: 2.5rem;
             }
-
             .container {
                 padding: 2rem 5%;
             }
@@ -377,7 +367,6 @@
     </style>
 </head>
 <body data-theme="dark">
-    <!-- Header -->
     <header>
         <a href="index.html" class="logo">StatCalc</a>
         <nav>
@@ -390,52 +379,38 @@
         </nav>
     </header>
 
-    <!-- Main Content -->
     <div class="container">
-        <!-- Page Header -->
         <div class="page-header">
-            <h1 class="page-title">Binomial Distribution Calculator</h1>
+            <h1 class="page-title">Poisson Distribution Calculator</h1>
             <p class="page-description">
-                Explore the binomial distribution with interactive visualizations. 
-                Adjust parameters and see real-time updates of probabilities and statistical measures.
+                Explore the Poisson distribution for modeling rare events.
+                Perfect for counting occurrences in fixed intervals of time or space.
             </p>
         </div>
 
-        <!-- Calculator Grid -->
         <div class="calculator-grid">
-            <!-- Control Panel -->
             <div class="control-panel">
                 <h2 class="panel-title">Parameters</h2>
                 
                 <div class="parameter-group">
                     <div class="parameter-label">
-                        <span>Number of Trials (n)</span>
-                        <span class="parameter-value" id="n-value">20</span>
+                        <span>Rate (λ)</span>
+                        <span class="parameter-value" id="lambda-value">3.00</span>
                     </div>
-                    <input type="range" min="1" max="100" value="20" class="slider" id="n-slider">
-                    <input type="number" min="1" max="100" value="20" class="input-box" id="n-input">
+                    <input type="range" min="0.1" max="20" step="0.1" value="3" class="slider" id="lambda-slider">
+                    <input type="number" min="0.1" max="20" step="0.1" value="3" class="input-box" id="lambda-input">
                 </div>
 
                 <div class="parameter-group">
                     <div class="parameter-label">
-                        <span>Success Probability (p)</span>
-                        <span class="parameter-value" id="p-value">0.50</span>
+                        <span>Number of Events (k)</span>
+                        <span class="parameter-value" id="k-value">3</span>
                     </div>
-                    <input type="range" min="0.01" max="0.99" step="0.01" value="0.5" class="slider" id="p-slider">
-                    <input type="number" min="0.01" max="0.99" step="0.01" value="0.5" class="input-box" id="p-input">
-                </div>
-
-                <div class="parameter-group">
-                    <div class="parameter-label">
-                        <span>Number of Successes (k)</span>
-                        <span class="parameter-value" id="k-value">10</span>
-                    </div>
-                    <input type="range" min="0" max="20" value="10" class="slider" id="k-slider">
-                    <input type="number" min="0" max="20" value="10" class="input-box" id="k-input">
+                    <input type="range" min="0" max="40" value="3" class="slider" id="k-slider">
+                    <input type="number" min="0" max="40" value="3" class="input-box" id="k-input">
                 </div>
             </div>
 
-            <!-- Visualization Panel -->
             <div class="visualization-panel">
                 <h2 class="panel-title">Probability Mass Function (PMF)</h2>
                 <div class="chart-container">
@@ -449,58 +424,56 @@
             </div>
         </div>
 
-        <!-- Results Section -->
         <div class="results-section">
             <h2 class="panel-title">Statistical Results</h2>
             <div class="results-grid">
                 <div class="result-card">
                     <div class="result-label">P(X = k)</div>
-                    <div class="result-value" id="pmf-result">0.1762</div>
+                    <div class="result-value" id="pmf-result">0.2240</div>
                 </div>
                 <div class="result-card">
                     <div class="result-label">P(X ≤ k)</div>
-                    <div class="result-value" id="cdf-result">0.5881</div>
+                    <div class="result-value" id="cdf-result">0.6472</div>
                 </div>
                 <div class="result-card">
                     <div class="result-label">Mean (μ)</div>
-                    <div class="result-value" id="mean-result">10.00</div>
+                    <div class="result-value" id="mean-result">3.00</div>
                 </div>
                 <div class="result-card">
                     <div class="result-label">Variance (σ²)</div>
-                    <div class="result-value" id="variance-result">5.00</div>
+                    <div class="result-value" id="variance-result">3.00</div>
                 </div>
                 <div class="result-card">
                     <div class="result-label">Std Dev (σ)</div>
-                    <div class="result-value" id="stddev-result">2.24</div>
+                    <div class="result-value" id="stddev-result">1.73</div>
                 </div>
                 <div class="result-card">
                     <div class="result-label">Mode</div>
-                    <div class="result-value" id="mode-result">10</div>
+                    <div class="result-value" id="mode-result">3</div>
                 </div>
             </div>
         </div>
 
-        <!-- Knowledge Section -->
         <div class="knowledge-section">
-            <h2 class="panel-title">Understanding Binomial Distribution</h2>
+            <h2 class="panel-title">Understanding Poisson Distribution</h2>
             <div class="knowledge-grid">
                 <div class="knowledge-card">
                     <h3>📘 Definition</h3>
                     <ul>
-                        <li>Models the number of successes in a fixed number of independent trials</li>
-                        <li>Each trial has only two possible outcomes (success or failure)</li>
-                        <li>Probability of success remains constant across trials</li>
-                        <li>Trials are independent of each other</li>
+                        <li>Models number of events in fixed intervals</li>
+                        <li>Events occur independently</li>
+                        <li>Average rate (λ) remains constant</li>
+                        <li>Probability of multiple events is negligible</li>
                     </ul>
                 </div>
 
                 <div class="knowledge-card">
                     <h3>🔧 Applications</h3>
                     <ul>
-                        <li>Quality control: defective items in a batch</li>
-                        <li>Medical trials: patient recovery rates</li>
-                        <li>Marketing: conversion rates in campaigns</li>
-                        <li>Genetics: inheritance of traits</li>
+                        <li>Customer arrivals at a service point</li>
+                        <li>Website visits per hour</li>
+                        <li>Number of phone calls received</li>
+                        <li>Radioactive decay events</li>
                     </ul>
                 </div>
 
@@ -508,19 +481,19 @@
                     <h3>📊 Key Properties</h3>
                     <ul>
                         <li>Discrete probability distribution</li>
-                        <li>Defined by two parameters: n and p</li>
-                        <li>Mean: μ = n × p</li>
-                        <li>Variance: σ² = n × p × (1-p)</li>
+                        <li>Mean equals variance: μ = σ² = λ</li>
+                        <li>Defined by single parameter λ</li>
+                        <li>Approximates binomial when n is large</li>
                     </ul>
                 </div>
 
                 <div class="knowledge-card">
                     <h3>🧮 Formula</h3>
                     <ul>
-                        <li>PMF: P(X=k) = C(n,k) × p^k × (1-p)^(n-k)</li>
-                        <li>C(n,k) is the binomial coefficient</li>
-                        <li>Calculates "n choose k" combinations</li>
-                        <li>CDF: Sum of PMF values from 0 to k</li>
+                        <li>PMF: P(X=k) = (λ^k × e^(-λ)) / k!</li>
+                        <li>e is Euler's number (≈2.718)</li>
+                        <li>λ is the average rate parameter</li>
+                        <li>k is the number of occurrences</li>
                     </ul>
                 </div>
             </div>
@@ -528,57 +501,43 @@
     </div>
 
     <script>
-        // Theme Toggle
         function toggleTheme() {
             const root = document.documentElement;
             const currentTheme = root.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
             root.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            
             document.querySelector('.theme-toggle').textContent = newTheme === 'dark' ? '🌙' : '☀️';
-            
             updateChartTheme();
         }
 
-        // Load saved theme
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.querySelector('.theme-toggle').textContent = savedTheme === 'dark' ? '🌙' : '☀️';
         });
 
-        // Mathematical Functions
         function factorial(n) {
             if (n <= 1) return 1;
-            return n * factorial(n - 1);
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
         }
 
-        function binomialCoefficient(n, k) {
-            if (k > n) return 0;
-            if (k === 0 || k === n) return 1;
-            return factorial(n) / (factorial(k) * factorial(n - k));
+        function poissonPMF(lambda, k) {
+            return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k);
         }
 
-        function binomialPMF(n, p, k) {
-            const coef = binomialCoefficient(n, k);
-            return coef * Math.pow(p, k) * Math.pow(1 - p, n - k);
-        }
-
-        function binomialCDF(n, p, k) {
+        function poissonCDF(lambda, k) {
             let sum = 0;
             for (let i = 0; i <= k; i++) {
-                sum += binomialPMF(n, p, i);
+                sum += poissonPMF(lambda, i);
             }
             return sum;
         }
 
-        function calculateMode(n, p) {
-            return Math.floor((n + 1) * p);
-        }
-
-        // Chart Setup
         let pmfChart, cdfChart;
 
         function getChartColors() {
@@ -610,21 +569,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: colors.text }
-                        }
-                    },
+                    plugins: { legend: { labels: { color: colors.text } } },
                     scales: {
-                        x: {
-                            grid: { color: colors.grid },
-                            ticks: { color: colors.text }
-                        },
-                        y: {
-                            grid: { color: colors.grid },
-                            ticks: { color: colors.text },
-                            beginAtZero: true
-                        }
+                        x: { grid: { color: colors.grid }, ticks: { color: colors.text } },
+                        y: { grid: { color: colors.grid }, ticks: { color: colors.text }, beginAtZero: true }
                     }
                 }
             });
@@ -638,7 +586,7 @@
                         label: 'Cumulative Probability',
                         data: [],
                         backgroundColor: 'rgba(245, 158, 66, 0.2)',
-                        borderColor: colors.accent,
+                        borderColor: colors.accentSecondary,
                         borderWidth: 3,
                         fill: true,
                         tension: 0.1
@@ -647,22 +595,10 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            labels: { color: colors.text }
-                        }
-                    },
+                    plugins: { legend: { labels: { color: colors.text } } },
                     scales: {
-                        x: {
-                            grid: { color: colors.grid },
-                            ticks: { color: colors.text }
-                        },
-                        y: {
-                            grid: { color: colors.grid },
-                            ticks: { color: colors.text },
-                            beginAtZero: true,
-                            max: 1
-                        }
+                        x: { grid: { color: colors.grid }, ticks: { color: colors.text } },
+                        y: { grid: { color: colors.grid }, ticks: { color: colors.text }, beginAtZero: true, max: 1 }
                     }
                 }
             });
@@ -670,7 +606,6 @@
 
         function updateChartTheme() {
             const colors = getChartColors();
-            
             [pmfChart, cdfChart].forEach(chart => {
                 chart.options.plugins.legend.labels.color = colors.text;
                 chart.options.scales.x.grid.color = colors.grid;
@@ -681,28 +616,17 @@
             });
         }
 
-        // Update calculations and charts
         function updateCalculations() {
-            const n = parseInt(document.getElementById('n-input').value);
-            const p = parseFloat(document.getElementById('p-input').value);
+            const lambda = parseFloat(document.getElementById('lambda-input').value);
             const k = parseInt(document.getElementById('k-input').value);
 
-            // Update k slider max
-            document.getElementById('k-slider').max = n;
-            if (k > n) {
-                document.getElementById('k-slider').value = n;
-                document.getElementById('k-input').value = n;
-            }
+            const pmf = poissonPMF(lambda, k);
+            const cdf = poissonCDF(lambda, k);
+            const mean = lambda;
+            const variance = lambda;
+            const stddev = Math.sqrt(lambda);
+            const mode = Math.floor(lambda);
 
-            // Calculate statistics
-            const pmf = binomialPMF(n, p, k);
-            const cdf = binomialCDF(n, p, k);
-            const mean = n * p;
-            const variance = n * p * (1 - p);
-            const stddev = Math.sqrt(variance);
-            const mode = calculateMode(n, p);
-
-            // Update results
             document.getElementById('pmf-result').textContent = pmf.toFixed(4);
             document.getElementById('cdf-result').textContent = cdf.toFixed(4);
             document.getElementById('mean-result').textContent = mean.toFixed(2);
@@ -710,22 +634,21 @@
             document.getElementById('stddev-result').textContent = stddev.toFixed(2);
             document.getElementById('mode-result').textContent = mode;
 
-            // Update charts
-            updateCharts(n, p, k);
+            updateCharts(lambda, k);
         }
 
-        function updateCharts(n, p, k) {
+        function updateCharts(lambda, k) {
             const labels = [];
             const pmfData = [];
             const cdfData = [];
+            const maxK = Math.ceil(lambda + 4 * Math.sqrt(lambda));
 
-            for (let i = 0; i <= n; i++) {
+            for (let i = 0; i <= maxK; i++) {
                 labels.push(i);
-                pmfData.push(binomialPMF(n, p, i));
-                cdfData.push(binomialCDF(n, p, i));
+                pmfData.push(poissonPMF(lambda, i));
+                cdfData.push(poissonCDF(lambda, i));
             }
 
-            // Highlight selected k
             const colors = pmfData.map((_, i) => i === k ? '#f57842' : '#f59e42');
 
             pmfChart.data.labels = labels;
@@ -738,7 +661,6 @@
             cdfChart.update('none');
         }
 
-        // Synchronize inputs
         function syncInputs(sliderId, inputId, valueId, decimals = 0) {
             const slider = document.getElementById(sliderId);
             const input = document.getElementById(inputId);
@@ -759,11 +681,9 @@
             });
         }
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             initCharts();
-            syncInputs('n-slider', 'n-input', 'n-value');
-            syncInputs('p-slider', 'p-input', 'p-value', 2);
+            syncInputs('lambda-slider', 'lambda-input', 'lambda-value', 2);
             syncInputs('k-slider', 'k-input', 'k-value');
             updateCalculations();
         });
